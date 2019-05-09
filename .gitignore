@@ -20,6 +20,9 @@ logs
 *.iml
 *.ipr
 logs
+HELP.md
+mvnw
+mvnw.cmd
 
 ### NetBeans ###
 nbproject/private/
