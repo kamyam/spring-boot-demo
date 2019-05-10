@@ -1,17 +1,35 @@
 package com.example.springbootdemo.service;
 
-import com.example.springbootdemo.dao.UserMapper;
+import com.example.springbootdemo.dao.test2.UserMapper2;
+import com.example.springbootdemo.dao.test1.UserMapper1;
 import com.example.springbootdemo.main.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.beans.Transient;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserMapper1 userMapper1;
 
-    public void insert(User user) {
-        userMapper.insert(user);
+
+    @Autowired
+    private UserMapper2 userMapper2;
+
+    @Transactional(transactionManager = "test1TransactionManager")
+    public void insert1(User user) {
+        userMapper1.insert(user);
+        int i = 1 / 0;
+
+    }
+
+    @Transactional(transactionManager = "test2TransactionManager")
+    public void insert2(User user) {
+        userMapper2.insert(user);
+        int i = 1 / 0;
+
     }
 }

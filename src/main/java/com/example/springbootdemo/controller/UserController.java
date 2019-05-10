@@ -17,12 +17,17 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/insert")
-    public void insert(){
+    public void insert(int env) {
         User user = new User();
         user.setId(UUID.randomUUID().toString());
         user.setAge(new Random().nextInt(100));
         user.setName(Thread.currentThread().getName());
 
-        userService.insert(user);
+        if(env == 1){
+            userService.insert1(user);
+        }else {
+            userService.insert2(user);
+        }
+
     }
 }

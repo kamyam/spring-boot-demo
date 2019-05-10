@@ -1,9 +1,22 @@
 spring:
   datasource:
+    test1:
       driver-class-name : com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/kamyam?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+      jdbc-url: jdbc:mysql://localhost:3306/kamyam?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
       username: root
       password: root
+
+    test2:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/sandy?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+      username: root
+      password: root
+
+
+
+
+
+
 
 mybatis:
   mapperLocations: classpath*:mapper*/**/*.xml
