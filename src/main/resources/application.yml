@@ -1,5 +1,7 @@
 spring:
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+  db:
     test1:
       driver-class-name : com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://localhost:3306/kamyam?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
@@ -11,6 +13,7 @@ spring:
       jdbc-url: jdbc:mysql://localhost:3306/sandy?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
       username: root
       password: root
+
 
 
 

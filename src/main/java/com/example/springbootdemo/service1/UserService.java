@@ -1,11 +1,13 @@
-package com.example.springbootdemo.service;
+package com.example.springbootdemo.service1;
 
 import com.example.springbootdemo.dao.test2.UserMapper2;
 import com.example.springbootdemo.dao.test1.UserMapper1;
-import com.example.springbootdemo.datasource.annotation.DataSource;
+import com.example.springbootdemo.datasource.annotation.DynamicDataSource;
+import com.example.springbootdemo.datasource.enums.DataSourceTypeEnum;
 import com.example.springbootdemo.main.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -18,12 +20,14 @@ public class UserService {
     @Autowired
     private UserMapper2 userMapper2;
 
-    @DataSource("aa")
+    @Transactional
+    @DynamicDataSource(DataSourceTypeEnum.TEST1)
     public void insert1(User user) {
         userMapper1.insert(user);
 
     }
-
+    @DynamicDataSource(DataSourceTypeEnum.TEST2)
+    @Transactional
     public void insert2(User user) {
         userMapper2.insert(user);
 

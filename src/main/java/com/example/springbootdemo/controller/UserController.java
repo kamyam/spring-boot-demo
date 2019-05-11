@@ -1,7 +1,7 @@
 package com.example.springbootdemo.controller;
 
 import com.example.springbootdemo.main.User;
-import com.example.springbootdemo.service.UserService;
+import com.example.springbootdemo.service1.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

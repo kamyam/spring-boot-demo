@@ -15,18 +15,18 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
-@Configuration // 注册到springboot容器中
-@MapperScan(basePackages = "com.example.springbootdemo.dao.test2", sqlSessionFactoryRef = "test2SqlSessionFactory")
+//@Configuration // 注册到springboot容器中
+//@MapperScan(basePackages = "com.example.springbootdemo.dao.test2", sqlSessionFactoryRef = "test2SqlSessionFactory")
 public class DataSource2Config {
 
 
-    @Bean(name = "test2DataSource")
+ /*   @Bean(name = "test2DataSource")
     @ConfigurationProperties(prefix = "spring.datasource.test2")
     public DataSource testDataSource() {
         return DataSourceBuilder.create().build();
     }
-
-    @Bean(name = "test2SqlSessionFactory")
+*/
+  /*  @Bean(name = "test2SqlSessionFactory")
     public SqlSessionFactory testSqlSessionFactory(@Qualifier("test2DataSource") DataSource dataSource)
             throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
@@ -45,6 +45,6 @@ public class DataSource2Config {
             @Qualifier("test2SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-
+*/
 }
 
