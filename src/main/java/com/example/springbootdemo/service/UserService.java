@@ -19,17 +19,13 @@ public class UserService {
     @Autowired
     private UserMapper2 userMapper2;
 
-    @Transactional(transactionManager = "test1TransactionManager")
     public void insert1(User user) {
         userMapper1.insert(user);
-        int i = 1 / 0;
 
     }
 
-    @Transactional(transactionManager = "test2TransactionManager")
     public void insert2(User user) {
         userMapper2.insert(user);
-        int i = 1 / 0;
 
     }
 }

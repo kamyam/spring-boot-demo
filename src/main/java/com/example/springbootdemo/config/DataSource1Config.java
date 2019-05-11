@@ -27,7 +27,6 @@ public class DataSource1Config {
     }
 
     @Bean(name = "test1SqlSessionFactory")
-    @Primary
     public SqlSessionFactory testSqlSessionFactory(@Qualifier("test1DataSource") DataSource dataSource)
             throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
@@ -42,7 +41,6 @@ public class DataSource1Config {
     }
 
     @Bean(name = "test1SqlSessionTemplate")
-    @Primary
     public SqlSessionTemplate testSqlSessionTemplate(
             @Qualifier("test1SqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
