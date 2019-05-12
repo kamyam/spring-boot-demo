@@ -1,11 +1,10 @@
 spring:
   datasource:
     #type: com.alibaba.druid.pool.DruidDataSource #数据源类型
-    custom-config: custom.datasource.
 
 
-
-custom:
+db:
+  config-prefix: db.datasource.
   datasource:
     test1:
       driver-class-name : com.mysql.cj.jdbc.Driver

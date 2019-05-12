@@ -32,7 +32,7 @@ import java.util.Map;
 @Configuration
 @MapperScan(basePackages = "com.example.springbootdemo.dao")
 public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {//,ApplicationContextAware
-    private static final String CUSTOM_CONFIG = "spring.datasource.custom-config";
+    private static final String CUSTOM_CONFIG = "db.config-prefix";
 
     private String dbConfigPrefix;
 
