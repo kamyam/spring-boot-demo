@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DynamicDataSourceHolder {
 
-    //使用ThreadLocal记录当前线程的数据源key
+    //使用ThreadLocal记录当前线程的使用的数据源
     private static final ThreadLocal<String> holder = new ThreadLocal<>();
 
 
