@@ -14,7 +14,7 @@ public class DynamicDataSourceHolder {
      * 设置数据源
      */
     public static void putDataSource(DataSourceTypeEnum key) {
-        log.info("使用数据源: " + key);
+        log.info("使用数据源: " + key.getName());
         holder.set(key.getName());
     }
 
