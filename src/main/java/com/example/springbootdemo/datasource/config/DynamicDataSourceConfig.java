@@ -1,22 +1,19 @@
 package com.example.springbootdemo.datasource.config;
 
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.example.springbootdemo.datasource.DynamicDataSource;
 import com.example.springbootdemo.datasource.enums.DataSourceTypeEnum;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.boot.context.properties.bind.BindHandler;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
@@ -47,7 +44,7 @@ public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProces
         Map<Object, Object> targetDataSources = new HashMap<>();
 
         DataSourceTypeEnum.getDataSourceTypes().forEach(x -> {
-            DruidDataSource dataSource = applicationContext.getBean(DB_CONFIG_PREFIX + x.getName(), DruidDataSource.class);
+            HikariDataSource dataSource = applicationContext.getBean(DB_CONFIG_PREFIX + x.getName(), HikariDataSource.class);
             //设置默认数据库
             if (x == DataSourceTypeEnum.getDefaultDataSourceType()) {
                 dynamicDataSource.setDefaultTargetDataSource(dataSource);
@@ -81,15 +78,16 @@ public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProces
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
         DataSourceTypeEnum.getDataSourceTypes().forEach(dataSourceTypeEnum -> {
-            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DruidDataSource.class);
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(HikariDataSource.class);
             if (dataSourceTypeEnum == DataSourceTypeEnum.getDefaultDataSourceType()) {
                 builder.getBeanDefinition().setPrimary(true);
             }
             String dsName = DB_CONFIG_PREFIX + dataSourceTypeEnum.getName();
             beanDefinitionRegistry.registerBeanDefinition(dsName, builder.getBeanDefinition());
 
-            DruidDataSource dataSource = applicationContext.getBean(dsName, DruidDataSource.class);
+            HikariDataSource dataSource = applicationContext.getBean(dsName, HikariDataSource.class);
 
+            Binder.get(environment).bind(dsName, Bindable.ofInstance(dataSource));
 
         });
     }

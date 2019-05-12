@@ -1,6 +1,6 @@
 spring:
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
+    #type: com.alibaba.druid.pool.DruidDataSource
   db:
     test1:
       driver-class-name : com.mysql.cj.jdbc.Driver

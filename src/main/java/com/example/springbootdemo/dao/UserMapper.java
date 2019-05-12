@@ -1,8 +1,8 @@
-package com.example.springbootdemo.dao.test2;
+package com.example.springbootdemo.dao;
 
 import com.example.springbootdemo.main.User;
 
-public interface UserMapper2 {
+public interface UserMapper {
 
     void insert(User user);
 }
