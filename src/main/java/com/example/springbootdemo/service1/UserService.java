@@ -17,11 +17,14 @@ public class UserService {
     private UserMapper userMapper;
 
     @DynamicDataSource(DataSourceTypeEnum.TEST1)
+    @Transactional
     public void insert1(User user) {
         userMapper.insert(user);
 
     }
+
     @DynamicDataSource(DataSourceTypeEnum.TEST2)
+    @Transactional
     public void insert2(User user) {
         userMapper.insert(user);
 

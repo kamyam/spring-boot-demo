@@ -14,7 +14,7 @@ public class DynamicDataSourceHolder {
      * 设置数据源
      */
     public static void putDataSource(DataSourceTypeEnum key) {
-        log.info("使用数据源: " + key.getName());
+        log.info("==> 使用数据源: " + key.getName());
         holder.set(key.getName());
     }
 
@@ -29,7 +29,7 @@ public class DynamicDataSourceHolder {
      * 清除数据源
      */
     public static void clearDataSource() {
-        log.info("移除数据源" + holder.get());
+        log.info("==> 移除数据源: " + holder.get());
         holder.remove();
     }
 }

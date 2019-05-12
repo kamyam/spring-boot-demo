@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -30,14 +31,12 @@ import java.util.Map;
 
 @Configuration
 @MapperScan(basePackages = "com.example.springbootdemo.dao")
-public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProcessor, ApplicationContextAware, EnvironmentAware {
-    private static final String DB_CONFIG_PREFIX = "custom.datasource.";
+public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {//,ApplicationContextAware
+    private static final String CUSTOM_CONFIG = "spring.datasource.custom-config";
 
-    private ApplicationContext applicationContext;
+    private String dbConfigPrefix;
 
     private Environment environment;
-
-    private Object defaultTargetDataSource;
 
     private Map<Object, Object> targetDataSources;
 
@@ -45,10 +44,9 @@ public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProces
     @Bean
     public DynamicDataSource dynamicDataSource() {
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
-
-        dynamicDataSource.setDefaultTargetDataSource(targetDataSources.get("test1"));
-
-        dynamicDataSource.setTargetDataSources(targetDataSources);
+        Object defaultTargetDataSource = this.targetDataSources.getOrDefault(DataSourceTypeEnum.getDefaultDataSourceType().getFullName(this.dbConfigPrefix), null);
+        dynamicDataSource.setDefaultTargetDataSource(defaultTargetDataSource);
+        dynamicDataSource.setTargetDataSources(this.targetDataSources);
         return dynamicDataSource;
     }
 
@@ -73,42 +71,35 @@ public class DynamicDataSourceConfig implements BeanDefinitionRegistryPostProces
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
-        Map<Object, Object> dataSourcesMap = new HashMap<>();
         DataSourceTypeEnum.getDataSourceTypes().forEach(dataSourceTypeEnum -> {
-            String dsName = DB_CONFIG_PREFIX + dataSourceTypeEnum.getName();
+            //创建数据源，并注册到IOC容易中
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(HikariDataSource.class);
             if (dataSourceTypeEnum == DataSourceTypeEnum.getDefaultDataSourceType()) {
                 builder.getBeanDefinition().setPrimary(true);
             }
-
-            beanDefinitionRegistry.registerBeanDefinition(dsName, builder.getBeanDefinition());
-
-            HikariDataSource dataSource = applicationContext.getBean(dsName, HikariDataSource.class);
-
-            Binder.get(environment).bind(dsName, Bindable.ofInstance(dataSource));
-
-
-            dataSourcesMap.put(dataSourceTypeEnum.getName(), dataSource);
+            beanDefinitionRegistry.registerBeanDefinition(dataSourceTypeEnum.getFullName(dbConfigPrefix), builder.getBeanDefinition());
         });
-        this.targetDataSources = dataSourcesMap;
-        this.defaultTargetDataSource = dataSourcesMap.getOrDefault(DB_CONFIG_PREFIX + DataSourceTypeEnum.getDefaultDataSourceType().getName(), null);
+
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-
+        Map<Object, Object> dataSourcesMap = new HashMap<>();
+        DataSourceTypeEnum.getDataSourceTypes().forEach(dataSourceTypeEnum -> {
+            //绑定配置
+            String fullName = dataSourceTypeEnum.getFullName(this.dbConfigPrefix);
+            Object dataSource = configurableListableBeanFactory.getBean(fullName);
+            Binder.get(environment).bind(fullName, Bindable.ofInstance(dataSource));
+            dataSourcesMap.put(dataSourceTypeEnum.getName(), dataSource);
+        });
+        this.targetDataSources = dataSourcesMap;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    private Map<String, PropertyValues> dataSourceMap = new HashMap<>();
 
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+        this.dbConfigPrefix = environment.getProperty(CUSTOM_CONFIG);
     }
 
 }
